@@ -6,14 +6,20 @@
 
 Python 3.7.6
 
-### 使用说明
+### 环境安装
 
 ```bash
 pip install -r requirements.txt
-python main.py {username} {password}
 ```
 
+### 使用说明
 
+
+#### 登录
+
+```bash
+python main.py {username} {password}
+```
 
 ### 文件说明
 

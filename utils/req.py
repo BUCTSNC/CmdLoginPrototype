@@ -1,6 +1,8 @@
 from . import utils
 import requests
+import logging
 
+logger = logging.getLogger(__name__)
 baseIP = utils.IPDetect()
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 " \
      "Safari/537.36 "
@@ -21,6 +23,7 @@ def reloadBaseUrl():
 
 
 def getChallenge(JSONP,username, ip):
+    logger.debug("getChallenge")
     url = "http://" + baseIP + "/cgi-bin/get_challenge"
     params = {
         "username": username,
@@ -34,32 +37,35 @@ def getChallenge(JSONP,username, ip):
 
 
 def getLocalIP():
+    logger.debug("getLocalIP")
     JSONP = utils.JSONPGenerator()
     url = "http://" + baseIP + "/cgi-bin/rad_user_info"
     res = requests.get(url, {"callback": JSONP[0], "_": JSONP[1]}, headers=headers)
     text = res.text
     data = utils.filterJSONP(JSONP[0], text)
+    logger.debug(data)
+    if 'online_ip' not in data:
+        return None
     return data['online_ip']
 
 
-def login(data):
+def login(username,password,acid,ip):
     url = "http://" + baseIP + "/cgi-bin/srun_portal"
     JSONP = utils.JSONPGenerator()
-    ip = getLocalIP()
-    challenge = getChallenge(JSONP,data["username"],ip)
-    msg = '{"username":"' + data["username"] + '","password":"' + data["password"] + '","ip":"'+ip+'","acid":"20","enc_ver":"srun_bx1"}'
+    challenge = getChallenge(JSONP,username,ip)
+    msg = '{"username":"' + username + '","password":"' + password + '","ip":"'+ip+'","acid":"20","enc_ver":"srun_bx1"}'
     i = utils.info(msg,challenge)
-    hmd5 = utils.md5(data["password"],challenge)
-    data['password'] = "{MD5}" + hmd5
+    hmd5 = utils.md5(password,challenge)
+    password = "{MD5}" + hmd5
     device,platform = utils.getOS()
     params = {
         'callback':JSONP[0],
         "action": "login",
-        "username":data["username"],
-        "password":data["password"],
-        "ac_id":data["acid"],
+        "username":username,
+        "password":password,
+        "ac_id":acid,
         "ip": ip,
-        "chksum": utils.get_chksum(challenge,data["username"],hmd5,data["acid"],ip,200,1,i),
+        "chksum": utils.get_chksum(challenge,username,hmd5,acid,ip,200,1,i),
         "info":i,
         "n":"200",
         "type":"1",
@@ -72,8 +78,23 @@ def login(data):
     res = requests.get(url,params,headers=headers)
     text = res.text
     data = utils.filterJSONP(JSONP[0], text)
+    return data
     # print(data)
 
+def logout(ip,ac_id):
+    url = "http://" + baseIP + "/cgi-bin/srun_portal"
+    JSONP = utils.JSONPGenerator()
+    params = {
+        'callback':JSONP[0],
+        "action": "logout",
+        "ac_id": ac_id,
+        "ip": ip,
+        '_':JSONP[1]
+    }
+    res = requests.get(url,params,headers=headers)
+    text = res.text
+    data = utils.filterJSONP(JSONP[0], text)
+    return data
 
 def getUserInfo():
     JSONP = utils.JSONPGenerator()

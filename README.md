@@ -45,3 +45,4 @@ python main.py {username} {password}
 - 日志系统
 - 用户数据获取
 - 登录状态获取
+- 登录密码秘文输入

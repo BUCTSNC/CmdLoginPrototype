@@ -18,7 +18,19 @@ pip install -r requirements.txt
 #### 登录
 
 ```bash
-python main.py {username} {password}
+python main.py login
+```
+
+#### 查询
+
+```bash
+python main.py info
+```
+
+#### 登出
+
+```bash
+python main.py logout
 ```
 
 ### 文件说明

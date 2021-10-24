@@ -33,17 +33,19 @@ def getChallenge(JSONP,username, ip):
     return data['challenge']
 
 
-def getLocalIP(JSONP):
+def getLocalIP():
+    JSONP = utils.JSONPGenerator()
     url = "http://" + baseIP + "/cgi-bin/rad_user_info"
     res = requests.get(url, {"callback": JSONP[0], "_": JSONP[1]}, headers=headers)
     text = res.text
     data = utils.filterJSONP(JSONP[0], text)
     return data['online_ip']
 
+
 def login(data):
     url = "http://" + baseIP + "/cgi-bin/srun_portal"
     JSONP = utils.JSONPGenerator()
-    ip = getLocalIP(JSONP)
+    ip = getLocalIP()
     challenge = getChallenge(JSONP,data["username"],ip)
     msg = '{"username":"' + data["username"] + '","password":"' + data["password"] + '","ip":"'+ip+'","acid":"20","enc_ver":"srun_bx1"}'
     i = utils.info(msg,challenge)
@@ -72,3 +74,11 @@ def login(data):
     data = utils.filterJSONP(JSONP[0], text)
     # print(data)
 
+
+def getUserInfo():
+    JSONP = utils.JSONPGenerator()
+    url = "http://" + baseIP + "/cgi-bin/rad_user_info"
+    res = requests.get(url, {"callback": JSONP[0], "_": JSONP[1]}, headers=headers)
+    text = res.text
+    data = utils.filterJSONP(JSONP[0], text)
+    return data

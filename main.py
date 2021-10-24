@@ -21,8 +21,9 @@ def handleByte(byte):
         byte /= 1024
         tail = "KB"
     return str(byte) + tail
+
 def getUsername():
-    print("账户:")
+    print("账户:",end=" ")
     username = input()
     if username == "" or username == None :
         raise UserWarning("账户输入为空")
@@ -36,12 +37,14 @@ def getPassword():
 
 
 def handleLogin():
-    ip = req.getLocalIP()
+    ip,loginStatus = req.getStatus()
     logging.info("Local IP: " + ip)
     if ip == None :
         logging.error("Fail to get ip")
         return
-
+    if loginStatus == True:
+        logger.error("has logined")
+        return
     logger.info("start login")
     try:
         username = getUsername()
@@ -86,9 +89,12 @@ def handleLookup():
     
 
 def handleLogout():
-    ip = req.getLocalIP()
+    ip,loginStatus = req.getStatus()
     if ip == None :
         logging.error("Fail to get ip")
+        return
+    if loginStatus == False:
+        logger.error("you haven't logined")
         return
     logging.info("Local IP: " + ip)
 

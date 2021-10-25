@@ -36,7 +36,7 @@ def getChallenge(JSONP,username, ip):
     return data['challenge']
 
 
-def getLocalIP():
+def getStatus():
     logger.debug("getLocalIP")
     JSONP = utils.JSONPGenerator()
     url = "http://" + baseIP + "/cgi-bin/rad_user_info"
@@ -44,9 +44,12 @@ def getLocalIP():
     text = res.text
     data = utils.filterJSONP(JSONP[0], text)
     logger.debug(data)
+    loginStatus = True
+    if "error" in data and data['error'] == "not_online_error":
+        loginStatus = False
     if 'online_ip' not in data:
-        return None
-    return data['online_ip']
+        return None,False
+    return data['online_ip'],loginStatus
 
 
 def login(username,password,acid,ip):

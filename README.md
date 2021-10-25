@@ -18,7 +18,19 @@ pip install -r requirements.txt
 #### 登录
 
 ```bash
-python main.py {username} {password}
+python main.py login
+```
+
+#### 查询
+
+```bash
+python main.py info
+```
+
+#### 登出
+
+```bash
+python main.py logout
 ```
 
 ### 文件说明
@@ -40,9 +52,10 @@ python main.py {username} {password}
 
 ### 待完成功能
 
-- logout方法
-- 获取当前系统平台及其标识
-- 日志系统
-- 用户数据获取
-- 登录状态获取
-- 登录密码秘文输入
+- [x] logout方法
+- [ ] 获取当前系统平台及其标识
+- [ ] 日志系统
+- [x] 用户数据获取
+- [x] 登录状态获取
+- [x] 登录密码秘文输入
+

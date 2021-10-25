@@ -72,7 +72,7 @@ def handleLookup():
         logging.error(info)
         return
     msg = "登录时间: {}\n登入后使用流量: {}\n在线IP: {}\n当前mac: {}\n当前账户: {}\n已使用流量: {}\n已使用时长: {}\n用户余额: {}\n本月已使用金额: {}\n".format(
-            time.strftime("%Y-%m-%d %H-%M-%S",time.gmtime(info['add_time'])),
+            time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(info['add_time'])),
             handleByte(info['all_bytes']),
             info['online_ip'],
             info['user_mac'],

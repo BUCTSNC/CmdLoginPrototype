@@ -36,7 +36,6 @@ def net_check():
     else:
         return ip, status
 def login(ip):
-    print(os.environ)
     username = os.getenv("SRUN_LOGIN_USERNAME")
     password = os.getenv("SRUN_LOGIN_PASSWORD")
     if not username or not password:

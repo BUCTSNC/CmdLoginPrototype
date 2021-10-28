@@ -28,6 +28,9 @@ def net_check():
     except Exception as e:
         logger.error("网络连接异常,登录终止")
         return None
+    else:
+        logging.info("已连接公网")
+        return None
     try:
         ip, status = utils.req.getStatus()
     except ConnectTimeout as e:
